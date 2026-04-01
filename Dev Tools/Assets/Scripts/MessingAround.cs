@@ -1,6 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MessingAround : EditorWindow
 {
@@ -14,52 +15,33 @@ public class MessingAround : EditorWindow
     {
         EditorWindow.GetWindow(typeof(MessingAround));
         
-        EditorApplication.update += DoSomething;
-
-        //SceneView.duringSceneGui += Hello;
     }
 
     void OnGUI()
     {
-        Vector3 mousePosition = Event.current.mousePosition;
-        Debug.Log(mousePosition);
-
         SceneView testing = SceneView.lastActiveSceneView;
         
         myGameObject = (GameObject)EditorGUILayout.ObjectField("Example!!", myGameObject, typeof(GameObject), false);
-        //wantsMouseMove = true;
 
         layer = EditorGUILayout.LayerField("Attach Layer", layer);
     }
 
-    private void Hello(SceneView view)
+    private void Update()
     {
-        Debug.Log("Mouse Position");
+        //Debug.Log(SceneViewMouse.mousePos);
+        
         if (!currentGameObject) return;
 
-        /*Vector3 mousePosition = Event.current.mousePosition;
-        mousePosition.y = view.camera.pixelHeight - mousePosition.y;
-        Debug.Log("mousePosition");*/
-        ;
-        /*Ray mouseRay = HandleUtility.GUIPointToWorldRay(mousePosition);
         RaycastHit mouseHit;
-        //currentGameObject.transform.position = mousePosition;
 
-        if (Physics.Raycast(mouseRay, out mouseHit, Mathf.Infinity, layer))
+        if (Physics.Raycast(SceneViewMouse.mouseRay, out mouseHit, Mathf.Infinity))
         {
-            Debug.Log("hi?");
-            //currentGameObject.transform.position = mouseHit.point;
+            Debug.Log("worked :)");
+            currentGameObject.transform.position = mouseHit.point;
         }
-        Debug.Log("u no hit? :(");*/
+        Debug.DrawRay(SceneViewMouse.mouseRay.origin, SceneViewMouse.mouseRay.direction * 100f, Color.aliceBlue, 1f);
+        
     }
-
-    private void OnInspectorUpdate()
-    {
-
-        /*Vector3 mousePosition = Event.current.mousePosition;
-        Debug.Log("Mouse Position");*/
-    }
-
 
     [MenuItem("Tools/Spawn :)")]
     private static void No()
@@ -71,27 +53,6 @@ public class MessingAround : EditorWindow
     [MenuItem("Tools/stopy :(")]
     private static void StopTest()
     {
-        EditorApplication.update -= DoSomething;
         currentGameObject = null;
-    }
-
-    private static void DoSomething()
-    {
-        if (!currentGameObject) return;
-
-
-        //Debug.Log("F u work");
-
-        //Vector3 mousePosition = Event.current.mousePosition;
-
-        /*Ray mouseRay = HandleUtility.GUIPointToWorldRay(Mouse.current.position.ReadValue());
-        RaycastHit mouseHit;
-
-        if (Physics.Raycast(mouseRay, out mouseHit, Mathf.Infinity, layer))
-        {
-            Debug.Log("hi?");
-            currentGameObject.transform.position = mouseHit.point;
-        }
-        Debug.Log("u no hit? :(");*/
     }
 }
