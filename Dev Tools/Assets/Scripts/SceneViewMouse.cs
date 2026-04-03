@@ -1,27 +1,41 @@
-using System;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 [InitializeOnLoad]
 public class SceneViewMouse
 {
-    public static Vector3 mousePos = Vector3.zero;
-    public static SceneView viewInstance;
+    public static SceneView viewInstance; // Current scene view opened
     public static Ray mouseRay;
+
+    // Creates events for detecting input
+    public delegate void LeftMouseDown();
+    public static event LeftMouseDown OnLeftMouseDown;
+
+    public delegate void EscButtonPress();
+    public static event EscButtonPress OnEscButtonPress;
 
     static SceneViewMouse()
     {
         SceneView.beforeSceneGui += OnBeforeSceneGui;
     }
 
+    // Runs when OnGUI is called, Sets variables from scene view
     private static void OnBeforeSceneGui(SceneView view)
     {
-        mousePos = Event.current.mousePosition;
         viewInstance = view;
 
-        mouseRay = HandleUtility.GUIPointToWorldRay(mousePos);
-        
+        // Gets the ray of the mouse position
+        mouseRay = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+
+        if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
+        {
+            // Invokes event for left click
+            OnLeftMouseDown?.Invoke();
+        }
+        if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Escape)
+        {
+            // Invokes event for esc key
+            OnEscButtonPress?.Invoke();
+        }
     }
 }
