@@ -20,7 +20,7 @@ I created a prefab spawner that will project/show the object in the scene view. 
  - Toggles on/off prefab editing
  - Removes/shows projection
 
-## How To Open the Unity Project
+## How To Open Dev Tool
 
 **Step 1** Clone the repo and open Unity
 
